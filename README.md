@@ -25,3 +25,18 @@ func X(a,b) {
 }
 
 ```
+
+## GRAMMAR
+
+non terminals -> INTEGER, FLOAT, CHAR, STRING
+
+```
+S -> statements
+
+statements ->   statement
+                | statements
+
+statement ->    assignment
+                | function_call
+                | function_definition
+```
