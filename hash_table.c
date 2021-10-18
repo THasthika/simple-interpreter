@@ -28,21 +28,6 @@ int hash_func(HashTable* table, char *key) {
     return hash;
 }
 
-size_t get_size(int type) {
-    switch (type)
-    {
-    case TYPE_FLOAT:
-        return sizeof(float);
-        break;
-    case TYPE_INTEGER:
-        return sizeof(int);
-        break;
-    default:
-        return 0;
-        break;
-    }
-}
-
 void hash_table_create(HashTable** table, size_t size) {
     *table = malloc(sizeof(HashTable));
     (*table)->size = size;
@@ -59,30 +44,23 @@ void hash_table_destroy(HashTable* table) {
     free(table);
 }
 
-int hash_table_add(HashTable* table, char* key, void* data, int type) {
+int hash_table_add(HashTable* table, char* key, double data) {
 
     int loc = hash_func(table, key);
 
     HashTableItem item;
-    size_t s = get_size(type);
-    if (s == 0) {
-        return 0;
-    }
-    item.data = malloc(s);
-    item.type = type;
-    memcpy(item.data, data, s);
+    item.data = data;
 
     // get slot
     LinkedList* l = table->lists[loc];
     if (linked_list_insert(l, key, &item, sizeof(HashTableItem)) == 0) {
-        free(item.data);
         return 0;
     }
 
     return 1;
 }
 
-int hash_table_remove(HashTable* table, char* key, void* data) {
+int hash_table_remove(HashTable* table, char* key, double* data) {
 
     // get hash loc
     int loc = hash_func(table, key);
@@ -98,18 +76,13 @@ int hash_table_remove(HashTable* table, char* key, void* data) {
 
     if (data != NULL) {
         // copy data
-        size_t s = get_size(item.type);
-        if (s == 0) {
-            return 0;
-        }
-        memcpy(data, item.data, s);
+        *data = item.data;
     }
 
-    free(item.data);
     return 1;
 }
 
-int hash_table_replace(HashTable* table, char* key, void* data, int type) {
+int hash_table_replace(HashTable* table, char* key, double data) {
     // get hash loc
     int loc = hash_func(table, key);
 
@@ -122,24 +95,12 @@ int hash_table_replace(HashTable* table, char* key, void* data, int type) {
 
     HashTableItem* item = (HashTableItem*) listItem->data;
 
-    size_t s = get_size(type);
-    if (s == 0) {
-        return 0;
-    }
-
-    if (type == item->type) {
-        memcpy(item->data, data, s);
-    } else {
-        free(item->data);
-        item->type = type;
-        item->data = malloc(s);
-        memcpy(item->data, data, s);
-    }
+    item->data = data;
 
     return 1;
 }
 
-int hash_table_lookup(HashTable* table, char* key, void* data, int* type) {
+int hash_table_lookup(HashTable* table, char* key, double* data) {
 
     // get hash loc
     int loc = hash_func(table, key);
@@ -153,18 +114,7 @@ int hash_table_lookup(HashTable* table, char* key, void* data, int* type) {
 
     HashTableItem* item = (HashTableItem*) listItem->data;
 
-    size_t s = get_size(item->type);
-    if (s == 0) {
-        return 0;
-    }
-
-    if (data != NULL) {
-        memcpy(data, item->data, s);
-    }
-
-    if (type != NULL) {
-        memcpy(type, &item->type, sizeof(int));
-    }
+    *data = item->data;
 
     return 1;
 }

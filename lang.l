@@ -4,6 +4,18 @@
     #include "y.tab.h"
     
     void yyerror(char *);
+
+// \'[a-zA-Z0-9\!@#$%\^&\*\(\)_+-={}\[\]\|\\:;'"<,>.?/~`]\' {
+//                     yylval.char_ = yytext[1];
+//                     return CHAR;
+//                 }
+// \"[a-zA-Z0-9\!@#$%\^&\*\(\)_+-={}\[\]\|\\:;'"<,>.?/~`]*\" {
+//                     int l = strlen(yytext);
+//                     yytext[l-1] = '\0';
+//                     yylval.str_ = strdup(&yytext[1]);
+//                     return STRING;
+//                 }
+
 %}
 
 %%
@@ -12,28 +24,18 @@
                     return PRINT;
                 }
 [0-9]+          {
-                    yylval.float_ = 1.0f * atoi(yytext);
+                    yylval.number_ = 1.0 * atoi(yytext);
                     return NUMBER;
                 }
 [0-9]*\.[0-9]+  {
-                    yylval.float_ = atof(yytext);
+                    yylval.number_ = strtod(yytext, NULL);
                     return NUMBER;
                 }
-\'[a-zA-Z0-9\!@#$%\^&\*\(\)_+-={}\[\]\|\\:;'"<,>.?/~`]\' {
-                    yylval.char_ = yytext[1];
-                    return CHAR;
-                }
-\"[a-zA-Z0-9\!@#$%\^&\*\(\)_+-={}\[\]\|\\:;'"<,>.?/~`]*\" {
-                    int l = strlen(yytext);
-                    yytext[l-1] = '\0';
-                    yylval.str_ = strdup(&yytext[1]);
-                    return STRING;
-                }
-[a-zA-Z0-9][a-zA-Z0-9]* {
+[a-zA-Z0-9][a-zA-Z0-9_]* {
                     yylval.identifier_ = strdup(yytext);
                     return IDENTIFIER;
                 }
-[+-=/\*]        {
+[+-=/\*\^%]      {
                     return *yytext;
                 }
 [ \t\n]         {;}
