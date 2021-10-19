@@ -4,39 +4,12 @@
 
 ```
 datatypes
-int - 1, 2, 3, ...
-float - 1.2, 0.24
-char - 'x'
-string - "xax"
-boolean - true or false
+numbers - 1, 2.0, 3, ...
 
 identifiers or variables
-[a-zA-Z][a-zA-Z0-9]*
-
-comment
-// | /* xxx */
+[a-zA-Z][a-zA-Z0-9_]*
 
 assignment
 x = 2
 
-function
-func X(a,b) {
-
-}
-
-```
-
-## GRAMMAR
-
-non terminals -> INTEGER, FLOAT, CHAR, STRING
-
-```
-S -> statements
-
-statements ->   statement
-                | statements
-
-statement ->    assignment
-                | function_call
-                | function_definition
 ```
