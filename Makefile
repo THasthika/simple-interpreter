@@ -1,6 +1,9 @@
-.PHONY: all
+.PHONY: all clean
 
 all: main
+
+clean:
+	rm y.tab.h y.tab.c lex.yy.c *.o main
 
 y.tab.h y.tab.c: lang.y hash_table.h linked_list.h
 	yacc -d lang.y

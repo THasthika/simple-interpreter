@@ -1,5 +1,13 @@
 # Simple Interpreter
 
+## Run
+
+```bash
+make
+
+./main
+```
+
 ## Language
 
 ```
